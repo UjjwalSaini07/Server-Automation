@@ -3,6 +3,7 @@ import requests
 import schedule
 from datetime import datetime, timedelta, timezone
 from pymongo import MongoClient, ASCENDING
+from zoneinfo import ZoneInfo
 
 API_URL = "https://nexgen-quillix.onrender.com/health"
 
@@ -14,14 +15,25 @@ client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
+# TTL index on expireAt field (documents removed when expireAt is reached)
 collection.create_index(
     [("expireAt", ASCENDING)],
     expireAfterSeconds=0
 )
 
+def is_within_allowed_hours():
+    """Return True if current IST time is between 9:00 AM and 2:00 AM."""
+    ist = datetime.now(ZoneInfo("Asia/Kolkata"))
+    hour = ist.hour
+    return (9 <= hour <= 23) or (0 <= hour < 2)
+
 def ping_api():
+    if not is_within_allowed_hours():
+        print(f"[{datetime.now(timezone.utc)}] Skipping ping (outside allowed IST hours).")
+        return
+
     now = datetime.now(timezone.utc)
-    expire_time = now + timedelta(hours=12)
+    expire_time = now + timedelta(hours=1)  # ⬅️ expiry set to 1 hour
 
     try:
         response = requests.get(API_URL, timeout=30)
@@ -49,7 +61,7 @@ def ping_api():
 
 def main():
     schedule.every(2).minutes.do(ping_api)
-    print(f"Started API keep-alive service for {API_URL}")
+    print(f"Started API keep-alive service for {API_URL} (IST 9:00 → 2:00, logs expire after 1h)")
 
     while True:
         schedule.run_pending()
