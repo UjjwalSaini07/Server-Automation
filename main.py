@@ -7,7 +7,6 @@ from zoneinfo import ZoneInfo
 
 API_URL = "https://nexgen-quillix.onrender.com/health"
 
-MONGO_URI = "mongodb://localhost:27017"
 DB_NAME = "Quillix-ServerAutomation"
 COLLECTION_NAME = "api_health_logs"
 
@@ -60,7 +59,7 @@ def ping_api():
         })
 
 def main():
-    schedule.every(2).minutes.do(ping_api)
+    schedule.every(15).minutes.do(ping_api)
     print(f"Started API keep-alive service for {API_URL} (IST 9:00 → 2:00, logs expire after 1h)")
 
     while True:
