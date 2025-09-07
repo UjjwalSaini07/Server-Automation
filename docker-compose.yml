@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  api-keepalive:
+    build: .
+    container_name: api-keepalive
+    restart: always
+    volumes:
+      - ./firebase_key.json:/app/firebase_key.json:ro
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/firebase_key.json
