@@ -1,5 +1,7 @@
-requests
-schedule
 firebase-admin
-pymongo
 tzdata
+requests
+beautifulsoup4
+pymongo
+schedule
+python-dotenv
