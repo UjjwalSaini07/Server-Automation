@@ -56,7 +56,7 @@ def ping_api():
 
 def start():
     schedule.every(15).minutes.do(ping_api)
-    print(f"API ping service started (IST 9:00 → 2:00).")
+    print(f"Server : API ping service started (All Week - IST 9:00 → 2:00).")
 
     while True:
         schedule.run_pending()
