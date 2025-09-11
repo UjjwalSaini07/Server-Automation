@@ -67,3 +67,4 @@ dmypy.json
 .env
 
 firebase_key.json
+.server_run_count
