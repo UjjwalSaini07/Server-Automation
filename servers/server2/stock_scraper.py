@@ -11,12 +11,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MONGO_URI = os.getenv("MONGODB_URI")
+MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = "investiqdb"
 COLLECTION_NAME = "Stocks"
 
 if not MONGO_URI:
-    raise ValueError("MONGODB_URI not set in .env")
+    raise ValueError("MONGO_URI not set in .env")
 
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
@@ -105,7 +105,7 @@ def scrape_stocks():
 
 def start():
     schedule.every(15).minutes.do(scrape_stocks)
-    print("Stock scraper service started (Mon-Fri 9:30 → 16:00 IST).")
+    print("Server : Stock scraper service started (Mon-Fri 9:30 → 16:00 IST).")
     while True:
         schedule.run_pending()
         time.sleep(1)
